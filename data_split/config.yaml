@@ -1,0 +1,10 @@
+train: train/images 
+val: val/images
+test: test/images
+
+nc: 4
+names:
+  - yellow
+  - blue
+  - orange
+  - large_orange
