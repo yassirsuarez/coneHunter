@@ -1,0 +1,14 @@
+# Requirements ESSENZIALI per progetto YOLO
+
+# Versione Python richiesta
+python>=3.8,<3.12
+
+# Pacchetti principali (tutto il resto viene installato automaticamente)
+ultralytics==8.3.124
+opencv-python==4.11.0.86
+codecarbon==3.0.2
+
+# PyTorch - solo se vuoi forzare versioni specifiche
+# (altrimenti ultralytics installa automaticamente la versione compatibile)
+torch==2.7.0
+torchvision==0.22.0
