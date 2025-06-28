@@ -1,0 +1,11 @@
+# Versione Python richiesta
+python>=3.8,<3.12
+
+# Pacchetti principali
+torch>=2.0
+torchvision>=0.15
+torchmetrics>=1.0
+matplotlib>=3.5
+Pillow>=9.0
+tqdm>=4.64
+codecarbon>=2.1
