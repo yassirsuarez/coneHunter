@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risultati Training - ConeHunter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+  <style>
+    :root {
+      --primary-bg: #fafafa;
+      --card-bg: #ffffff;
+      --primary-text: #1a1a1a;
+      --secondary-text: #6b7280;
+      --border-color: #e5e7eb;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --accent-red: #ef4444;
+      --hover-bg: #f3f4f6;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background-color: var(--primary-bg);
+      color: var(--primary-text);
+      line-height: 1.6;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .header {
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-text);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .header p {
+      color: var(--secondary-text);
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+
+    .nav-section {
+      margin-bottom: 3rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      color: var(--primary-text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+      min-width: 160px;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-btn:hover {
+      background: var(--hover-bg);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .nav-btn i {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Debug Info */
+    .debug-info {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      font-size: 0.85rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .debug-info strong {
+      color: var(--primary-text);
+      font-weight: 600;
+    }
+
+    /* Model Sections */
+    .model-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .model-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--section-accent);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .yolo-section {
+      --section-accent: var(--accent-blue);
+    }
+
+    .faster-section {
+      --section-accent: var(--accent-green);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-text);
+      margin: 0;
+    }
+
+    .section-icon {
+      width: 32px;
+      height: 32px;
+      background: color-mix(in srgb, var(--section-accent) 12%, transparent);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--section-accent);
+    }
+
+    .section-icon i {
+      width: 20px;
+      height: 20px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .status-loading {
+      background: color-mix(in srgb, var(--accent-orange) 10%, transparent);
+      color: var(--accent-orange);
+    }
+
+    .status-success {
+      background: color-mix(in srgb, var(--accent-green) 10%, transparent);
+      color: var(--accent-green);
+    }
+
+    .status-error {
+      background: color-mix(in srgb, var(--accent-red) 10%, transparent);
+      color: var(--accent-red);
+    }
+
+    /* Images Grid */
+    .images-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .image-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .image-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--section-accent);
+    }
+
+    .image-item {
+      width: 100%;
+      height: 220px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      overflow: hidden;
+      background: var(--hover-bg);
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .image-item img,
+    .image-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .image-item:hover img,
+    .image-item:hover video {
+      transform: scale(1.05);
+    }
+
+    .image-title {
+      font-weight: 600;
+      color: var(--primary-text);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .image-info {
+      font-size: 0.85rem;
+      color: var(--secondary-text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .error-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: var(--hover-bg);
+      color: var(--secondary-text);
+      font-size: 0.9rem;
+      text-align: center;
+      flex-direction: column;
+      gap: 0.75rem;
+      border-radius: var(--radius);
+    }
+
+    .error-placeholder i {
+      width: 24px;
+      height: 24px;
+      color: var(--secondary-text);
+    }
+
+    .retry-btn {
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      color: var(--primary-text);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .retry-btn:hover {
+      background: var(--hover-bg);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--secondary-text);
+      grid-column: 1 / -1;
+    }
+
+    .no-results i {
+      width: 48px;
+      height: 48px;
+      color: var(--secondary-text);
+      margin-bottom: 1rem;
+    }
+
+    .no-results h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-text);
+    }
+
+    .no-results p {
+      font-size: 0.9rem;
+      margin-bottom: 0;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 1.5rem 1rem;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .nav-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .images-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .model-section {
+        padding: 1.5rem;
+      }
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary-bg: #0f0f0f;
+        --card-bg: #1a1a1a;
+        --primary-text: #ffffff;
+        --secondary-text: #a3a3a3;
+        --border-color: #2a2a2a;
+        --hover-bg: #262626;
+        --shadow-sm: 0 1px 2px 0 rgb(255 255 255 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(255 255 255 / 0.1), 0 2px 4px -2px rgb(255 255 255 / 0.1);
+      }
+    }
+
+    /* Smooth transitions */
+    * {
+      transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+  <!-- Modal per visualizzazione immagini -->
+  <div class="modal" id="imageModal" onclick="closeModal()">
+    <img id="modalImage" alt="Preview">
+  </div>
+
+  <div class="main-container">
+    <header class="header">
+      <h1>Risultati Training Models</h1>
+      <p>Visualizzazione performance delle reti neurali</p>
+    </header>
+
+    <nav class="nav-section">
+      <div class="nav-buttons">
+        <button class="nav-btn" onclick="goBack()">
+          <i data-lucide="arrow-left"></i>
+          <span>Torna Indietro</span>
+        </button>
+        <button class="nav-btn" onclick="refreshData()">
+          <i data-lucide="refresh-cw"></i>
+          <span>Aggiorna Dati</span>
+        </button>
+   
+      </div>
+    </nav>
+
+    <!-- Debug Info -->
+    <div class="debug-info" id="debug-info" style="display: none;">
+      <strong>Debug Information:</strong>
+      <div id="debug-content">Clicca "Aggiorna Dati" per vedere le informazioni di debug</div>
+    </div>
+
+    <!-- Sezione YOLO -->
+    <section class="model-section yolo-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <div class="section-icon">
+            <i data-lucide="zap"></i>
+          </div>
+          YOLO v12 Results
+        </h3>
+        <div class="status status-loading" id="yolo-status">
+          <span class="loading-spinner"></span>
+          Caricamento...
+        </div>
+      </div>
+      <div class="images-grid" id="yolo-images">
+        <div class="no-results">
+          <i data-lucide="image"></i>
+          <h3>Caricamento risultati YOLO...</h3>
+          <p>Attendere il completamento del caricamento</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sezione Faster R-CNN -->
+    <section class="model-section faster-section">
+      <div class="section-header">
+        <h3 class="section-title">
+          <div class="section-icon">
+            <i data-lucide="cpu"></i>
+          </div>
+          Faster R-CNN Results
+        </h3>
+        <div class="status status-loading" id="faster-status">
+          <span class="loading-spinner"></span>
+          Caricamento...
+        </div>
+      </div>
+      <div class="images-grid" id="faster-images">
+        <div class="no-results">
+          <i data-lucide="image"></i>
+          <h3>Caricamento risultati Faster R-CNN...</h3>
+          <p>Attendere il completamento del caricamento</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let debugMode = false;
+    let debugData = {};
+
+    // Initialize Lucide icons
+    function initializeLucide() {
+      try {
+        if (window.lucide && window.lucide.createIcons) {
+          window.lucide.createIcons();
+        }
+      } catch (error) {
+        console.error('Errore inizializzazione Lucide:', error);
+      }
+    }
+
+    // Funzioni di utilità
+    function updateStatus(elementId, type, message) {
+      const element = document.getElementById(elementId);
+      element.className = `status status-${type}`;
+      element.innerHTML = message;
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function toggleDebug() {
+      debugMode = !debugMode;
+      const debugInfo = document.getElementById('debug-info');
+      debugInfo.style.display = debugMode ? 'block' : 'none';
+      
+      if (debugMode) {
+        updateDebugInfo();
+      }
+    }
+
+    function updateDebugInfo() {
+      const debugContent = document.getElementById('debug-content');
+      debugContent.innerHTML = `
+        <pre>${JSON.stringify(debugData, null, 2)}</pre>
+        <hr>
+        <strong>Current Location:</strong> ${window.location.href}<br>
+        <strong>Base URL:</strong> ${window.location.origin}<br>
+        <strong>Path:</strong> ${window.location.pathname}
+      `;
+    }
+
+    function openModal(imageSrc) {
+      console.log('Tentativo apertura modal con:', imageSrc);
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      
+      const possibleUrls = [
+        imageSrc,
+        window.location.origin + imageSrc,
+        imageSrc.startsWith('/') ? imageSrc : '/' + imageSrc
+      ];
+      
+      console.log('URL possibili:', possibleUrls);
+      
+      modalImage.src = possibleUrls[0];
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('imageModal').style.display = 'none';
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Caricamento dati con gestione errori migliorata
+    async function loadModelImages(endpoint, containerId, statusId, modelName) {
+      try {
+        updateStatus(statusId, 'loading', `<span class="loading-spinner"></span> Caricando ${modelName}...`);
+        
+        console.log(`Caricamento da: ${endpoint}`);
+        const response = await fetch(endpoint);
+        
+        debugData[modelName] = {
+          endpoint: endpoint,
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url,
+          headers: Object.fromEntries(response.headers.entries())
+        };
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        debugData[modelName].responseData = data;
+        
+        console.log(`Dati ricevuti per ${modelName}:`, data);
+        
+        if (data.status === 'success') {
+          displayImages(containerId, data.images, modelName);
+          updateStatus(statusId, 'success', `<i data-lucide="check-circle" style="width: 16px; height: 16px;"></i> ${data.images.length} risultati caricati`);
+          initializeLucide();
+        } else {
+          throw new Error(data.error || 'Errore sconosciuto');
+        }
+        
+      } catch (error) {
+        console.error(`Errore caricamento ${modelName}:`, error);
+        debugData[modelName] = debugData[modelName] || {};
+        debugData[modelName].error = error.message;
+        
+        updateStatus(statusId, 'error', `<i data-lucide="x-circle" style="width: 16px; height: 16px;"></i> Errore: ${error.message}`);
+        showNoResults(containerId, `Errore nel caricamento ${modelName}`, error.message);
+        initializeLucide();
+      }
+      
+      if (debugMode) {
+        updateDebugInfo();
+      }
+    }
+
+    function displayImages(containerId, images, modelName) {
+      const container = document.getElementById(containerId);
+      
+      if (!images || images.length === 0) {
+        showNoResults(containerId, `Nessun risultato disponibile per ${modelName}`);
+        return;
+      }
+      
+      console.log(`Visualizzando ${images.length} immagini per ${modelName}`);
+      
+      container.innerHTML = images.map((image, index) => {
+        const imageUrl = image.url;
+        const imageId = `img-${modelName}-${index}`;
+        
+        console.log(`Immagine ${index}:`, image);
+        
+        return `
+          <div class="image-card">
+            <div class="image-item" onclick="openModal('${imageUrl}')">
+              ${image.type === 'video' ? 
+                `<video controls onloadstart="handleMediaLoad('${imageId}', true)" onerror="handleMediaError('${imageId}')">
+                  <source src="${imageUrl}" type="video/mp4">
+                  <div class="error-placeholder">
+                    <i data-lucide="video"></i>
+                    <span>Video non supportato</span>
+                  </div>
+                 </video>` :
+                `<img id="${imageId}" 
+                      src="${imageUrl}" 
+                      alt="${image.title || 'Risultato detection'}" 
+                      loading="lazy" 
+                      onload="handleImageLoad('${imageId}', true)"
+                      onerror="handleImageError('${imageId}', '${imageUrl}')">`
+              }
+              <div id="${imageId}-placeholder" class="error-placeholder" style="display: none;">
+                <i data-lucide="image-off"></i>
+                <div>Immagine non caricata</div>
+                <small>URL: ${imageUrl}</small>
+                <button class="retry-btn" onclick="retryImageLoad('${imageId}', '${imageUrl}')">
+                  <i data-lucide="refresh-cw" style="width: 14px; height: 14px; margin-right: 0.5rem;"></i>
+                  Riprova
+                </button>
+              </div>
+            </div>
+            <div class="image-title">
+              ${image.title || 'Detection Result'}
+            </div>
+            <div class="image-info">
+              <i data-lucide="file" style="width: 14px; height: 14px;"></i>
+              ${image.size ? formatFileSize(image.size) : 'Dimensione sconosciuta'}
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // Reinitialize Lucide icons for new content
+      initializeLucide();
+    }
+
+    function handleImageLoad(imageId, success) {
+      console.log(`Immagine ${imageId} caricata:`, success);
+      if (success) {
+        const placeholder = document.getElementById(imageId + '-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+      }
+    }
+
+    function handleImageError(imageId, originalUrl) {
+      console.error(`Errore caricamento immagine ${imageId}:`, originalUrl);
+      const img = document.getElementById(imageId);
+      const placeholder = document.getElementById(imageId + '-placeholder');
+      
+      if (img) img.style.display = 'none';
+      if (placeholder) {
+        placeholder.style.display = 'flex';
+        initializeLucide();
+        setTimeout(() => {
+          console.log('Tentativo automatico percorsi alternativi...');
+          retryImageLoad(imageId, originalUrl);
+        }, 1000);
+      }
+    }
+
+    function handleMediaLoad(mediaId, success) {
+      console.log(`Media ${mediaId} caricato:`, success);
+    }
+
+    function handleMediaError(mediaId) {
+      console.error(`Errore caricamento media ${mediaId}`);
+      const placeholder = document.getElementById(mediaId + '-placeholder');
+      if (placeholder) {
+        placeholder.style.display = 'flex';
+        initializeLucide();
+      }
+    }
+
+    function retryImageLoad(imageId, url) {
+      console.log(`Retry caricamento ${imageId} con URL:`, url);
+      const img = document.getElementById(imageId);
+      const placeholder = document.getElementById(imageId + '-placeholder');
+      
+      const alternativeUrls = [
+        url + '?retry=' + Date.now(),
+        url.replace('/media/', '/static/media/'),
+        url.replace('/media/', '/files/'),
+        window.location.origin + url,
+        url.replace('/media/', '/api/files/')
+      ];
+      
+      tryUrls(img, alternativeUrls, 0);
+      if (placeholder) placeholder.style.display = 'none';
+    }
+
+    function tryUrls(imgElement, urls, index) {
+      if (index >= urls.length) {
+        console.error('Tutti gli URL falliti per:', urls);
+        return;
+      }
+      
+      const testImg = new Image();
+      testImg.onload = function() {
+        console.log('URL funzionante trovato:', urls[index]);
+        imgElement.src = urls[index];
+        imgElement.style.display = 'block';
+      };
+      
+      testImg.onerror = function() {
+        console.log('URL fallito:', urls[index]);
+        tryUrls(imgElement, urls, index + 1);
+      };
+      
+      testImg.src = urls[index];
+    }
+
+    function showNoResults(containerId, message, errorDetails = '') {
+      const container = document.getElementById(containerId);
+      container.innerHTML = `
+        <div class="no-results">
+          <i data-lucide="image-off"></i>
+          <h3>${message}</h3>
+          <p>Verifica che i file siano presenti nelle cartelle di output</p>
+          ${errorDetails ? `<div style="margin-top: 1rem; padding: 1rem; background: var(--hover-bg); border-radius: var(--radius); font-family: monospace; font-size: 0.8rem; color: var(--secondary-text);">${errorDetails}</div>` : ''}
+        </div>
+      `;
+      initializeLucide();
+    }
+
+    async function loadAllData() {
+      console.log('Inizio caricamento dati...');
+      debugData = {};
+      
+      await Promise.all([
+        loadModelImages('/api/images/yolo/', 'yolo-images', 'yolo-status', 'YOLO'),
+        loadModelImages('/api/images/faster/', 'faster-images', 'faster-status', 'FasterRCNN')
+      ]);
+      
+      console.log('Caricamento completato');
+      if (debugMode) {
+        updateDebugInfo();
+      }
+    }
+
+    function refreshData() {
+      console.log('Refresh dati richiesto');
+      loadAllData();
+    }
+
+    // Inizializzazione
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM caricato, inizializzazione...');
+      initializeLucide();
+      loadAllData();
+    });
+
+    // Chiudi modal con ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

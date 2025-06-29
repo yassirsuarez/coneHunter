@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConeHunter Official Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+  <style>
+    :root {
+      --primary-bg: #fafafa;
+      --card-bg: #ffffff;
+      --primary-text: #1a1a1a;
+      --secondary-text: #6b7280;
+      --border-color: #e5e7eb;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --accent-red: #ef4444;
+      --hover-bg: #f3f4f6;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background-color: var(--primary-bg);
+      color: var(--primary-text);
+      line-height: 1.6;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .header {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-text);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.025em;
+    }
+
+    .header p {
+      color: var(--secondary-text);
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .nav-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      color: var(--primary-text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+      min-width: 140px;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-btn:hover {
+      background: var(--hover-bg);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      text-decoration: none;
+    }
+
+    .nav-btn:active {
+      transform: translateY(0);
+    }
+
+    .nav-btn i {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Loading state for buttons */
+    .nav-btn.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .nav-btn.loading::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border: 2px solid var(--accent-blue);
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 0.5rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Dashboard Grid Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Statistics Cards */
+    .stats-section {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-card:nth-child(1) {
+      --card-accent: var(--accent-blue);
+    }
+
+    .stat-card:nth-child(2) {
+      --card-accent: var(--accent-green);
+    }
+
+    .stat-card:nth-child(3) {
+      --card-accent: var(--accent-orange);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--card-accent);
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      background: color-mix(in srgb, var(--card-accent) 12%, transparent);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--card-accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-icon i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .stat-trend {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: color-mix(in srgb, var(--accent-green) 10%, transparent);
+      border-radius: var(--radius);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-green);
+    }
+
+    .stat-content {
+      margin-top: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary-text);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      color: var(--secondary-text);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat-footer {
+      font-size: 0.75rem;
+      color: var(--secondary-text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .info-link {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius);
+      transition: all 0.2s ease;
+      background: color-mix(in srgb, var(--accent-blue) 8%, transparent);
+      cursor: pointer;
+    }
+
+    .info-link:hover {
+      background: color-mix(in srgb, var(--accent-blue) 15%, transparent);
+      color: var(--accent-blue);
+      transform: scale(1.05);
+      text-decoration: none;
+    }
+
+    /* Chart Section */
+    .chart-section {
+      grid-column: 1 / -1;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-top: 0.5rem;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-text);
+      margin: 0;
+    }
+
+    .chart-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--accent-blue);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+
+    /* Status Indicators */
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius);
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .status-active {
+      background: color-mix(in srgb, var(--accent-green) 10%, transparent);
+      color: var(--accent-green);
+    }
+
+    .status-training {
+      background: color-mix(in srgb, var(--accent-orange) 10%, transparent);
+      color: var(--accent-orange);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 1.5rem 1rem;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .dashboard-grid {
+        gap: 1rem;
+      }
+      
+      .stats-section {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .nav-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .stat-value {
+        font-size: 2.25rem;
+      }
+      
+      .chart-section {
+        padding: 1.5rem;
+      }
+
+      .chart-container {
+        height: 350px;
+      }
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary-bg: #0f0f0f;
+        --card-bg: #1a1a1a;
+        --primary-text: #ffffff;
+        --secondary-text: #a3a3a3;
+        --border-color: #2a2a2a;
+        --hover-bg: #262626;
+        --shadow-sm: 0 1px 2px 0 rgb(255 255 255 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(255 255 255 / 0.1), 0 2px 4px -2px rgb(255 255 255 / 0.1);
+      }
+    }
+
+    /* Smooth transitions */
+    * {
+      transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-container" role="main" aria-label="Dashboard impatto CO₂">
+    <header class="header">
+      <h1>ConeHunter Dashboard</h1>
+      <p>Monitoraggio dell'addestramento della rete neurale</p>
+    </header>
+
+    <nav class="nav-section" role="navigation" aria-label="Azioni principali">
+      <div class="nav-buttons">
+        <a href="#" class="nav-btn" role="button" data-action="training-results">
+          <i data-lucide="bar-chart-3"></i>
+          <span>Metriche & KPI</span>
+        </a>
+        <a href="#" class="nav-btn" role="button" data-action="testing">
+          <i data-lucide="image"></i>
+          <span>Test Dataset</span>
+        </a>
+      
+      </div>
+    </nav>
+
+    <div class="dashboard-grid">
+      <!-- Statistics Section -->
+      <section class="stats-section" aria-label="Statistiche training e impatto ambientale">
+        <article class="stat-card" aria-describedby="desc-models">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <i data-lucide="cpu"></i>
+            </div>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="totalModels">2</div>
+            <div class="stat-label" id="desc-models">Modelli Attivi</div>
+            <div class="stat-footer">
+              
+            </div>
+          </div>
+        </article>
+        
+        <article class="stat-card" aria-describedby="desc-hours">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <i data-lucide="clock"></i>
+            </div>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="totalHours">283</div>
+            <div class="stat-label" id="desc-hours">Ore Training Totali</div>
+            <div class="stat-footer">
+          
+            </div>
+          </div>
+        </article>
+        
+        <article class="stat-card" aria-describedby="desc-co2">
+          <div class="stat-header">
+            <div class="stat-icon">
+              <i data-lucide="leaf"></i>
+            </div>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="totalCO2">6.8</div>
+            <div class="stat-label" id="desc-co2">CO₂ Prodotta (kg)</div>
+            <div class="stat-footer">
+              <span>powered by CodeCarbon.io</span>
+              <a href="#" class="info-link" data-action="emissions">Come è stato calcolato?</a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Chart Section -->
+      <section class="chart-section" aria-label="Confronto performance modelli">
+        <div class="chart-header">
+          <i data-lucide="bar-chart-3" class="chart-icon"></i>
+          <h2 class="chart-title">Performance Modelli</h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="metricsChart"></canvas>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    let metricsChart = null;
+
+    function initializeLucide() {
+      try {
+        if (window.lucide && window.lucide.createIcons) {
+          window.lucide.createIcons();
+        }
+      } catch (error) {
+        console.error('Errore inizializzazione Lucide:', error);
+      }
+    }
+
+    function createComparisonChart() {
+      const ctx = document.getElementById('metricsChart');
+      if (!ctx) return;
+      
+      const chartCtx = ctx.getContext('2d');
+      
+      if (metricsChart) {
+        metricsChart.destroy();
+      }
+      
+      // Modern color palette
+      const colors = {
+        blue: '#3b82f6',
+        green: '#10b981',
+        orange: '#f59e0b'
+      };
+      
+      metricsChart = new Chart(chartCtx, {
+        type: 'radar',
+        data: {
+          labels: ['Precision', 'Recall', 'F1-Score', 'mAP@0.5', 'mAP@0.5:0.95'],
+          datasets: [
+            {
+              label: 'YOLO v12',
+              data: [88.5, 82.3, 85.2, 91.7, 76.4],
+              backgroundColor: colors.blue + '15',
+              borderColor: colors.blue,
+              borderWidth: 2,
+              pointBackgroundColor: colors.blue,
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2,
+              pointRadius: 4
+            },
+            {
+              label: 'Faster R-CNN',
+              data: [85.2, 78.9, 81.9, 89.3, 73.1],
+              backgroundColor: colors.green + '15',
+              borderColor: colors.green,
+              borderWidth: 2,
+              pointBackgroundColor: colors.green,
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2,
+              pointRadius: 4
+            },
+            {
+              label: 'YOLO v10',
+              data: [90.1, 84.7, 87.3, 93.2, 78.9],
+              backgroundColor: colors.orange + '15',
+              borderColor: colors.orange,
+              borderWidth: 2,
+              pointBackgroundColor: colors.orange,
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2,
+              pointRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                font: {
+                  size: 12,
+                  family: 'Inter'
+                },
+                color: getComputedStyle(document.documentElement).getPropertyValue('--primary-text'),
+                usePointStyle: true,
+                pointStyle: 'circle'
+              }
+            }
+          },
+          scales: {
+            r: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                stepSize: 20,
+                color: getComputedStyle(document.documentElement).getPropertyValue('--secondary-text'),
+                font: {
+                  size: 11
+                },
+                backdropColor: 'transparent'
+              },
+              grid: {
+                color: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
+              },
+              angleLines: {
+                color: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
+              },
+              pointLabels: {
+                color: getComputedStyle(document.documentElement).getPropertyValue('--primary-text'),
+                font: {
+                  size: 11,
+                  family: 'Inter'
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function handleNavigation(action, element) {
+      // Add loading state
+      if (element) {
+        element.classList.add('loading');
+      }
+
+      console.log('Navigating to:', action);
+      
+      // Map actions to your Django URLs
+      const urlMappings = {
+        'training-results': '/training_results/',
+        'testing': '/testing/',
+        'emissions': '/emissions/'
+      };
+
+      const url = urlMappings[action];
+      
+      if (url) {
+        // Navigate to the URL
+        window.location.href = url;
+      } else {
+        console.error('Unknown action:', action);
+        // Remove loading state if navigation fails
+        if (element) {
+          element.classList.remove('loading');
+        }
+      }
+    }
+
+    function updateStatistics() {
+      const data = {
+        totalModels: 2,
+        totalHours: 283,
+        totalCO2: 6.8
+      };
+
+      // Animazione contatori
+      const elements = [
+        { id: 'totalModels', value: data.totalModels },
+        { id: 'totalHours', value: data.totalHours },
+        { id: 'totalCO2', value: data.totalCO2 }
+      ];
+
+      elements.forEach(({ id, value }) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = value;
+        }
+      });
+    }
+
+    function initializeEventListeners() {
+      // Gestione click sui pulsanti di navigazione
+      document.querySelectorAll('[data-action]').forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          const action = e.currentTarget.getAttribute('data-action');
+          handleNavigation(action, e.currentTarget);
+        });
+      });
+
+      // Gestione hover sui card
+      document.querySelectorAll('.stat-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.transform = 'translateY(-3px)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'translateY(0)';
+        });
+      });
+    }
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', (event) => {
+      // Handle browser navigation if needed
+      console.log('Browser navigation detected');
+    });
+
+    // Inizializzazione
+    document.addEventListener("DOMContentLoaded", () => {
+      initializeLucide();
+      updateStatistics();
+      createComparisonChart();
+      initializeEventListeners();
+      
+      // Auto-refresh ogni 30 secondi
+      setInterval(() => {
+        updateStatistics();
+      }, 30000);
+    });
+
+    // Gestione ridimensionamento finestra
+    window.addEventListener('resize', () => {
+      if (metricsChart) {
+        metricsChart.resize();
+      }
+    });
+  </script>
+
+</body>
+</html>
