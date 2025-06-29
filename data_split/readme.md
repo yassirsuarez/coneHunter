@@ -8,16 +8,16 @@ Il dataset è basato sulla suddivisione del dataset originale disponibile su Kag
 ## Struttura della cartella `data_split`
 
 data_split/
-├── train/
-│ ├── images/ 
-│ └── labels/ 
-├── val/
-│ ├── images/
-│ └── labels/ 
-└── test/
-├── images/ 
-└── labels/ 
-
+├── 📁 train/
+│   ├── 📁 images/          
+│   ├── 📁 labels/          
+├── 📁 val/
+│   ├── 📁 images/         
+│   ├── 📁 labels/ 
+├── 📁 test/
+│   ├── 📁 images/           
+│   ├── 📁 labels/           
+└── config.yaml            
 
 ## Formato delle annotazioni
 
