@@ -130,23 +130,7 @@ La dashboard fornisce una panoramica completa delle attività di training:
 - **Grafico radar** confronta performance tra modelli
 - **Pulsanti di navigazione** per accedere alle sezioni specifiche
 
-### Visualizzazione Risultati
 
-```python
-# Esempio di integrazione con i tuoi modelli
-from django.shortcuts import render
-from .models import TrainingResults
-
-def results_view(request):
-    yolo_results = TrainingResults.objects.filter(model_type='yolo')
-    faster_rcnn_results = TrainingResults.objects.filter(model_type='faster_rcnn')
-    
-    context = {
-        'yolo_results': yolo_results,
-        'faster_rcnn_results': faster_rcnn_results,
-    }
-    return render(request, 'results.html', context)
-```
 
 ### API Endpoints
 
@@ -168,39 +152,8 @@ fetch('/api/images/faster/')
   });
 ```
 
-## 🔧 API Reference
 
-### Endpoints Principali
 
-| Endpoint | Metodo | Descrizione |
-|----------|--------|-------------|
-| `/api/images/yolo/` | GET | Ottieni risultati YOLO |
-| `/api/images/faster/` | GET | Ottieni risultati Faster R-CNN |
-| `/api/metrics/` | GET | Metriche aggregate |
-| `/api/status/` | GET | Status training |
-
-### Formato Risposta
-
-```json
-{
-  "status": "success",
-  "images": [
-    {
-      "url": "/media/yolo/detection_001.jpg",
-      "title": "Detection Result #1",
-      "size": 245760,
-      "type": "image"
-    }
-  ],
-  "metrics": {
-    "precision": 88.5,
-    "recall": 82.3,
-    "f1_score": 85.2,
-    "map_50": 91.7,
-    "map_50_95": 76.4
-  }
-}
-```
 
 ## 🎨 Personalizzazione
 
@@ -224,22 +177,6 @@ Il sistema supporta personalizzazione completa attraverso CSS custom properties:
     --card-bg: #1a1a1a;
   }
 }
-```
-
-### Configurazione Grafici
-
-```javascript
-// Personalizza metriche del grafico radar
-const chartData = {
-  labels: ['Precision', 'Recall', 'F1-Score', 'mAP@0.5', 'mAP@0.5:0.95'],
-  datasets: [
-    {
-      label: 'YOLO v12',
-      data: [88.5, 82.3, 85.2, 91.7, 76.4],
-      // Personalizzazione colori e stili
-    }
-  ]
-};
 ```
 
 ## 🔒 Sicurezza
