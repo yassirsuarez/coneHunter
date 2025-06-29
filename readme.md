@@ -7,6 +7,12 @@ Questo progetto è sviluppato per il corso di **Computer Vision e Deep Learning*
 ### 🏁 Collaborazione con PoliMarche Racing Team
 Il progetto è realizzato in stretta collaborazione con il **PoliMarche Racing Team**, il team Formula SAE dell'Università Politecnica delle Marche, fornendo supporto tecnologico per le competizioni di guida autonoma.
 
+### 🏛️ Istituzione
+**Università Politecnica delle Marche**
+- Dipartimento di Ingegneria dell'Informazione
+- Corso: Computer Vision e Deep Learning
+- Corso di Laurea: Magistrale in Ingegneria Informatica e dell'Automazione
+
 ### 👥 Team di Sviluppo
 - **Meloccaro Lorenzo**
 - **Suarez Sanchez Yassir Flavio**
@@ -45,11 +51,6 @@ La Formula SAE è una competizione internazionale dove team universitari progett
 - **Autonomous Events**: Competizioni di guida autonoma
 
 
-### 🏛️ Istituzione
-**Università Politecnica delle Marche**
-- Dipartimento di Ingegneria dell'Informazione
-- Corso: Computer Vision e Deep Learning
-- Corso di Laurea: Magistrale in Ingegneria Informatica e dell'Automazione
 
 ## 🔧 Tecnologie e Dipendenze Utilizzate
 
@@ -59,11 +60,6 @@ La Formula SAE è una competizione internazionale dove team universitari progett
 - **OpenCV**: Elaborazione immagini
 - **PIL/Pillow**: Manipolazione immagini
 
-### Data Science & Visualization
-- **NumPy**: Calcoli numerici
-- **Pandas**: Analisi dati
-- **Matplotlib/Seaborn**: Visualizzazione
-- **Plotly**: Grafici interattivi dashboard
 
 ### Web Framework
 - **Django**: Framework web per dashboard
@@ -79,16 +75,15 @@ La Formula SAE è una competizione internazionale dove team universitari progett
 ### Hardware Minimo
 - GPU: NVIDIA GTX 1060 6GB o superiore
 - RAM: 8GB
-- Storage: 10GB spazio libero
 
 ### Hardware Consigliato
 - GPU: NVIDIA RTX 3060 o superiore
 - RAM: 16GB
-- Storage: SSD con 20GB spazio libero
+
 
 ### Software
 ```
-Python >= 3.8
+Python >= 3.12
 CUDA >= 11.0
 cuDNN >= 8.0
 ```
@@ -117,7 +112,6 @@ pip install -r requirements.txt
 ```bash
 cd dashboard
 pip install -r requirements.txt
-python manage.py migrate
 python manage.py runserver
 ```
 
@@ -125,27 +119,18 @@ python manage.py runserver
 
 ### 🔥 YOLOv12 - Addestramento
 ```bash
-cd yolov12/scripts
-python train.py --data ../dataset --cfg yolov12.yaml --weights yolov12s.pt --epochs 100
+cd Yolov12/scripts
+python Yolov12.py    \\pesi pre addestrati
+python Yolov12_yaml.py    \\senza pesi pre addestrati
 ```
 
-### 🔥 YOLOv12 - Inferenza
-```bash
-cd yolov12/scripts
-python detect.py --weights yolov12s.pt --source path/to/images --save-txt --save-conf
-```
 
 ### ⚡ Faster R-CNN - Addestramento
 ```bash
-cd faster/scripts
-python train.py --dataset ../../dataset --epochs 50 --batch-size 4
+cd Faster_rcnn/script
+python faster_rcnn_script.py 
 ```
 
-### ⚡ Faster R-CNN - Inferenza
-```bash
-cd faster/scripts
-python detect.py --model trained_model.pth --input path/to/images --output results/
-```
 
 ### 📊 Dashboard di Confronto
 ```bash
@@ -154,14 +139,6 @@ python manage.py runserver
 # Apri il browser su http://localhost:8000
 ```
 
-### 🎥 Elaborazione Video (esempio generico)
-```python
-# Esempio di integrazione con i modelli addestrati
-from ultralytics import YOLO
-
-model = YOLO('yolov12/scripts/yolov12s.pt')
-results = model.predict(source='video.mp4', save=True)
-```
 
 ## 📊 Dashboard di Confronto
 
@@ -214,65 +191,6 @@ dataset/
     └── test.json
 ```
 
-### Metriche di Performance Comparative
-
-| Modello | mAP@0.5 | FPS | Inference Time | Precisione | Training Time |
-|---------|---------|-----|----------------|------------|---------------|
-| YOLOv12 | 0.94 | 45 | 22ms | 92.1% | ~12h |
-| Faster R-CNN | 0.97 | 12 | 83ms | 95.3% | ~24h |
-
-*Risultati ottenuti su dataset di test con GPU RTX 3060*
-
-## 🗂️ Struttura del Progetto
-
-```
-coneHunter/
-├── dataset/                    # Dataset per l'addestramento
-│   ├── images/
-│   ├── labels/
-│   └── annotations/
-├── yolov12/                   # Implementazione YOLOv12
-│   ├── scripts/              # Codici di addestramento e inferenza
-│   │   ├── train.py
-│   │   ├── detect.py
-│   │   ├── yolov12s.pt      # Pesi pre-addestrati
-│   │   └── yolov12.yaml     # Configurazione modello
-│   └── results/             # Risultati addestramento e test
-│       ├── training_logs/
-│       ├── weights/
-│       └── predictions/
-├── faster/                   # Implementazione Faster R-CNN
-│   ├── scripts/             # Codici di addestramento e inferenza
-│   │   ├── train.py
-│   │   ├── detect.py
-│   │   └── config.py
-│   └── results/             # Risultati addestramento
-│       ├── training_logs/
-│       ├── weights/
-│       └── evaluations/
-├── dashboard/               # Dashboard Django per confronti
-│   ├── manage.py
-│   ├── dashboard/
-│   │   ├── settings.py
-│   │   ├── views.py
-│   │   └── templates/
-│   ├── static/
-│   └── requirements.txt
-├── requirements.txt
-└── README.md
-```
-
-## 🏆 Risultati e Validazione
-
-### Test su Pista Reale
-- **Accuracy**: 96.3% rilevamento coni
-- **False Positives**: < 2%
-- **Latenza**: < 30ms per frame
-- **Robustezza**: Testato in condizioni variabili di luce
-
-### Benchmark Competitivi
-Il sistema è stato validato durante eventi Formula SAE dimostrando prestazioni superiori rispetto a sistemi tradizionali basati su computer vision classica.
-
 ## 🤝 Contributi
 
 Accogliamo contributi dalla comunità! Per contribuire:
@@ -298,32 +216,9 @@ Questo progetto è distribuito sotto licenza MIT. Vedere il file `LICENSE` per m
 - GitHub: [inserire username GitHub]
 - Email: [inserire email]
 
-### 🏛️ Istituzione Accademica
-**Università Politecnica delle Marche**
-- Dipartimento di Ingegneria dell'Informazione
-- Website: [univpm.it](https://www.univpm.it)
-
 ### 🏎️ Collaborazione
 **PoliMarche Racing Team**
 - Team Formula SAE UNIVPM
-- Website: [inserire link team se disponibile]
-
-## 🙏 Ringraziamenti
-
-- **PoliMarche Racing Team** per la collaborazione e il supporto tecnico
-- **Università Politecnica delle Marche** - Dipartimento di Ingegneria dell'Informazione
-- **Docenti del corso** Computer Vision e Deep Learning
-- **Formula SAE Italy** per il supporto alle competizioni
-- **Community open-source** YOLOv12 e Faster R-CNN per gli strumenti di sviluppo
-
-## 📚 Bibliografia e Riferimenti
-
-1. Redmon, J., et al. "YOLO: Real-Time Object Detection"
-2. Ren, S., et al. "Faster R-CNN: Towards Real-Time Object Detection"
-3. "Formula SAE Autonomous Vehicle Guidelines"
-4. "Computer Vision for Autonomous Racing Vehicles"
-
----
 
 ⭐ **Se questo progetto ti è stato utile, considera di mettergli una stella!**
 
