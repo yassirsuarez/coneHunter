@@ -176,19 +176,17 @@ python manage.py runserver
 
 ### Struttura Dataset
 ```
-dataset/
-├── images/
-│   ├── train/
-│   ├── val/
-│   └── test/
-├── labels/
-│   ├── train/
-│   ├── val/
-│   └── test/
-└── annotations/
-    ├── train.json
-    ├── val.json
-    └── test.json
+data_split/
+├── 📁 train/
+│   ├── 📁 images/          # Immagini per l'addestramento
+│   └── 📁 labels/          # Annotazioni per l'addestramento
+├── 📁 val/
+│   ├── 📁 images/          # Immagini per la validazione
+│   └── 📁 labels/          # Annotazioni per la validazione
+├── 📁 test/
+│   ├── 📁 images/          # Immagini per il test
+│   └── 📁 labels/          # Annotazioni per il test
+└── config.yaml            # File di configurazione del dataset
 ```
 
 ## 🤝 Contributi
@@ -205,16 +203,6 @@ Accogliamo contributi dalla comunità! Per contribuire:
 
 Questo progetto è distribuito sotto licenza MIT. Vedere il file `LICENSE` per maggiori dettagli.
 
-## 📞 Contatti
-
-### 👥 Team di Sviluppo
-**Yassir Flavio Suarez Sanchez**
-- GitHub: [@yassirsuarez](https://github.com/yassirsuarez)
-- Email: [inserire email]
-
-**Lorenzo Meloccaro**
-- GitHub: [inserire username GitHub]
-- Email: [inserire email]
 
 ### 🏎️ Collaborazione
 **PoliMarche Racing Team**
