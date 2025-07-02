@@ -217,16 +217,6 @@ def train_model():
 
 Distribuito sotto licenza MIT. Vedi `LICENSE` per maggiori informazioni.
 
-## 🙏 Ringraziamenti
-
-- [Django](https://djangoproject.com/) - Framework web
-- [Chart.js](https://www.chartjs.org/) - Grafici interattivi
-- [Lucide Icons](https://lucide.dev/) - Iconografia moderna
-- [CodeCarbon](https://codecarbon.io/) - Monitoraggio CO₂
-- [Bootstrap](https://getbootstrap.com/) - Framework CSS
-
----
-
 <div align="center">
 
 **[⬆ Torna su](#-conehunter)**
