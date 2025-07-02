@@ -213,13 +213,6 @@ def train_model():
 4. **Push** al branch (`git push origin feature/AmazingFeature`)
 5. **Apri** una Pull Request
 
-### Development Guidelines
-
-- Segui le convenzioni **PEP 8** per Python
-- Usa **ESLint** per JavaScript
-- Scrivi **test unitari** per nuove funzionalità
-- Documenta le **API changes**
-
 ## 📄 Licenza
 
 Distribuito sotto licenza MIT. Vedi `LICENSE` per maggiori informazioni.
