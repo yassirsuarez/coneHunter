@@ -72,16 +72,6 @@ La Formula SAE è una competizione internazionale dove team universitari progett
 
 ## 📋 Requisiti di Sistema
 
-### Hardware Minimo
-- GPU: NVIDIA GTX 1060 6GB o superiore
-- RAM: 8GB
-
-### Hardware Consigliato
-- GPU: NVIDIA RTX 3060 o superiore
-- RAM: 16GB
-
-
-### Software
 ```
 Python >= 3.12
 CUDA >= 11.0
@@ -188,16 +178,6 @@ data_split/
 │   └── 📁 labels/          # Annotazioni per il test
 └── config.yaml            # File di configurazione del dataset
 ```
-
-## 🤝 Contributi
-
-Accogliamo contributi dalla comunità! Per contribuire:
-
-1. Fork del progetto
-2. Crea un feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit delle modifiche (`git commit -m 'Add AmazingFeature'`)
-4. Push al branch (`git push origin feature/AmazingFeature`)
-5. Apri una Pull Request
 
 ## 📄 Licenza
 
