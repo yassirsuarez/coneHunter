@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![ConeHunter Logo](https://img.shields.io/badge/ConeHunter-AI%20Detection-blue?style=for-the-badge&logo=python)
-
 **Sistema avanzato di monitoraggio per training di reti neurali di object detection**
 
 [![Django](https://img.shields.io/badge/Django-092E20?style=flat&logo=django&logoColor=white)](https://djangoproject.com/)
